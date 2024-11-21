@@ -1,51 +1,41 @@
 const Habit = require('../models/habit');
 
-exports.create = async (req, res) => {  // Crear hábito
-    const { name, description, frequency, user } = req.body;
 
-    console.log("data received:", req.body);
 
+// create a new habit
+exports.createHabit = async (req, res) => {
     try {
-        // Crear un nuevo objeto Habit
-        const habit = new Habit({
-            name,
-            description,
-            frequency,
-            user
-        });
 
-        console.log("Habit created:", habit);
+    
+      const { name, description, category, startDate, goal, frequency, userId } = req.body;
+      const habit = new Habit({ name, description, category, startDate, goal, frequency, userId });
 
-        // Guardar el hábito en la base de datos
-        const savedHabit = await habit.save(); // Aquí asignamos el hábito guardado a la variable 'savedHabit'
-        
-        // Devolver el hábito guardado
-        console.log("Hábito guardado:", savedHabit); 
-        res.status(201).json({
-            message: 'Habit created successfully',
-            habit: savedHabit
-        });
+      console.log(habit);
+  
+      await habit.save();
+      res.status(201).json({ message: 'Habit created successfully', habit });
+
     } catch (error) {
-        // Devolver el error si ocurre
-        console.log("Error al crear hábito:", error);
-        console.error("Error al crear hábito:", error);  
-        res.status(500).json({
-            message: 'Error creating habit',
-            error: error.message
-        });
-    }
-};
 
-exports.getAllHabits = async (req, res) => {  // Obtener todos los habits
+      res.status(500).json({ message: 'Error creating habit', error });
+    }
+  };
+
+  exports.getAllHabits = async (req, res) => {  // Obtener todos los hábitos
     try {
         console.log('Obteniendo hábitos...');
         const habits = await Habit.find({});
-        console.log(habits);
+        
+        // Verificar cuántos hábitos fueron encontrados
+        console.log(`Se encontraron ${habits.length} hábitos.`);
+        
         res.status(200).json({ message: 'Habits retrieved successfully', habits });
     } catch (error) {
-        res.status(500).json({ message: 'Error retrieving habits from database', error });
+        console.error("Error retrieving habits:", error);
+        res.status(500).json({ message: 'Error retrieving habits from database', error: error.message });
     }
 };
+
 
 exports.getHabitById = async (req, res) => {  // Obtener un habit por su ID
     try {
@@ -65,56 +55,69 @@ exports.getHabitById = async (req, res) => {  // Obtener un habit por su ID
     }
 };
 
-exports.updateHabitById = async (req, res) => {  // Actualizar un habit por su ID
+exports.getHabitsByUser = async (req, res) => {  // Obtener hábitos de un usuario específico
     try {
+        const { userId } = req.params;  // Obtener el userId desde los parámetros de la URL
 
-        // >>>>>>>> Validate the request body
-        const { name, description, frequency } = req.body;
-
-        // >>>>>>>> Find the habit by its ID
-        const habit = await Habit.findByIdAndUpdate(
-            req.params.id, 
-            { name, description, frequency }, 
-            { new: true });
-
-        console.log(habit);
-
-        // >>>>>>>> If the habit is not found, return a 404 error
-        if (!habit) {
-            return res.status(404).json({ message: 'Habit not found' });
-        }
-
-        // >>>>>>>> Update the habit
-        habit.name = req.body.name;
-        habit.description = req.body.description;
-        habit.frequency = req.body.frequency;
+        // Buscar hábitos por userId
+        const habits = await Habit.find({ userId: userId });
         
-        await habit.save();
-
-        // >>>>>>>> Return the updated habit
-        res.status(200).json({ message: 'Habit updated successfully', habit });
+        // Verificar si se encontraron hábitos para el usuario
+        if (habits.length === 0) {
+            return res.status(404).json({ message: 'No habits found for this user' });
+        }
+        
+        console.log(`Se encontraron ${habits.length} hábitos para el usuario con ID: ${userId}`);
+        
+        res.status(200).json({ message: 'Habits retrieved successfully', habits });
     } catch (error) {
-        res.status(500).json({ message: 'Error updating habit', error });
+        console.error("Error retrieving habits for user:", error);
+        res.status(500).json({ message: 'Error retrieving habits from database', error: error.message });
     }
 };
 
-exports.deleteHabitById = async (req, res) => {
-    try {
-        console.log("ID recibido para eliminación:", req.params.id);
 
-        const habit = await Habit.findByIdAndDelete(req.params.id);
+exports.updateHabit = async (req, res) => {
+  try {
+    const { name, description, category, goal, frequency, status, streak } = req.body;
+    const habit = await Habit.findByIdAndUpdate(
+        req.params.id,
+       { name, 
+        description, 
+        category, 
+        goal, 
+        frequency, 
+        status, 
+        streak, 
+        updatedAt: Date.now() },
+      { new: true }
+    );
+    console.log(habit);
 
-        if (!habit) {
-            return res.status(404).json({ message: 'Habit not found' });
-        }
-
-        res.status(200).json({ message: 'Habit deleted successfully', habit });
-    } catch (error) {
-        console.error("Error deleting habit:", error);
-        res.status(500).json({ 
-            message: 'Error deleting habit', 
-            error: error.message 
-        });
+    if (!habit) {
+      return res.status(404).json({ message: 'Habit not found' });
     }
+
+    res.status(200).json({ message: 'Habit updated successfully', habit });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating habit', error });
+  }
+};
+
+// Eliminar un hábito
+exports.deleteHabit = async (req, res) => {
+  try {
+    const habit = await Habit.findByIdAndDelete(req.params.id);
+
+    console.log(habit);
+
+    if (!habit) {
+      return res.status(404).json({ message: 'Habit not found' });
+    }
+
+    res.status(200).json({ message: 'Habit deleted successfully', habit });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting habit', error });
+  }
 };
 

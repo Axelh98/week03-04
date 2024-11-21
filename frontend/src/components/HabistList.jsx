@@ -29,6 +29,7 @@ const HabitsList = () => {
               <h2>{habit.name}</h2>
               <p>{habit._id}</p>
               <p>{habit.description}</p>
+              <p>{habit.category}</p>
               <p><strong>Frecuencia:</strong> {habit.frequency}</p>
             </li>
           ))

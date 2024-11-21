@@ -1,4 +1,5 @@
-import HabitsList from "./HabistList"
+import HabitsList from "./components/HabistList";
+
 
 function App() {
   
@@ -6,7 +7,7 @@ function App() {
     <>
       
       <div className="app">
-        <HabitsList/>
+        <HabitsList />
       </div>
  
     </>
