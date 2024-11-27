@@ -4,26 +4,24 @@ const User = require('../models/user'); // Modelo debe estar en mayúsculas
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await User.find({});
-        res.status(200).json({ message: 'Users retrieved successfully', users });
+        res.render('users', { title: 'All Users', users });
     } catch (error) {
-        res.status(500).json({ message: 'Error retrieving users from database', error });
+        console.error(error);
+        res.status(500).send('Error retrieving users');
     }
 };
 
 // Obtain a user by its ID
 exports.getUserById = async (req, res) => {
     try {
-        const user = await User.findById(req.params.id); // Modelo `User` con mayúscula
-
-        console.log(user);
-
+        const user = await User.findById(req.params.id);
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).send('User not found');
         }
-
-        res.status(200).json({ message: 'User retrieved successfully', user });
+        res.render('userDetails', { title: 'User Details', user });
     } catch (error) {
-        res.status(500).json({ message: 'Error retrieving user from database', error });
+        console.error(error);
+        res.status(500).send('Error retrieving user');
     }
 };
 

@@ -1,0 +1,14 @@
+<form action="/habits/update/<%= habit._id %>" method="POST">
+    <input type="text" name="name" value="<%= habit.name %>" required />
+    <textarea name="description" required><%= habit.description %></textarea>
+    <input type="text" name="category" value="<%= habit.category %>" required />
+    <input type="number" name="goal" value="<%= habit.goal %>" required />
+    <input type="text" name="frequency" value="<%= habit.frequency %>" required />
+    <select name="status" required>
+      <option value="active" <%= habit.status === 'active' ? 'selected' : '' %>>Active</option>
+      <option value="inactive" <%= habit.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+    </select>
+    <input type="number" name="streak" value="<%= habit.streak %>" required />
+    <button type="submit">Update Habit</button>
+  </form>
+  

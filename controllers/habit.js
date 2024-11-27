@@ -1,7 +1,5 @@
 const Habit = require('../models/habit');
 
-
-
 // create a new habit
 exports.createHabit = async (req, res) => {
     try {
@@ -21,18 +19,13 @@ exports.createHabit = async (req, res) => {
     }
   };
 
-  exports.getAllHabits = async (req, res) => {  // Obtener todos los hábitos
+  exports.getAllHabits = async (req, res) => {
     try {
-        console.log('Obteniendo hábitos...');
         const habits = await Habit.find({});
-        
-        // Verificar cuántos hábitos fueron encontrados
-        console.log(`Se encontraron ${habits.length} hábitos.`);
-        
-        res.status(200).json({ message: 'Habits retrieved successfully', habits });
+        res.render('habits', { title: 'All Habits', habits });
     } catch (error) {
-        console.error("Error retrieving habits:", error);
-        res.status(500).json({ message: 'Error retrieving habits from database', error: error.message });
+        console.error(error);
+        res.status(500).send('Error retrieving habits');
     }
 };
 
@@ -55,52 +48,60 @@ exports.getHabitById = async (req, res) => {  // Obtener un habit por su ID
     }
 };
 
-exports.getHabitsByUser = async (req, res) => {  // Obtener hábitos de un usuario específico
-    try {
-        const { userId } = req.params;  // Obtener el userId desde los parámetros de la URL
-
-        // Buscar hábitos por userId
-        const habits = await Habit.find({ userId: userId });
-        
-        // Verificar si se encontraron hábitos para el usuario
-        if (habits.length === 0) {
-            return res.status(404).json({ message: 'No habits found for this user' });
-        }
-        
-        console.log(`Se encontraron ${habits.length} hábitos para el usuario con ID: ${userId}`);
-        
-        res.status(200).json({ message: 'Habits retrieved successfully', habits });
-    } catch (error) {
-        console.error("Error retrieving habits for user:", error);
-        res.status(500).json({ message: 'Error retrieving habits from database', error: error.message });
-    }
+exports.getHabitsByUser = async (req, res) => {
+  try {
+      const habits = await Habit.find({ userId: req.params.userId });
+      if (!habits.length) {
+          return res.status(404).send('No habits found for this user');
+      }
+      res.render('userHabits', { title: `Habits for User ${req.params.userId}`, habits });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Error retrieving user habits');
+  }
 };
 
 
-exports.updateHabit = async (req, res) => {
+// En el controlador habitController.js
+exports.showEditHabitForm = async (req, res) => {
   try {
-    const { name, description, category, goal, frequency, status, streak } = req.body;
-    const habit = await Habit.findByIdAndUpdate(
-        req.params.id,
-       { name, 
-        description, 
-        category, 
-        goal, 
-        frequency, 
-        status, 
-        streak, 
-        updatedAt: Date.now() },
-      { new: true }
-    );
-    console.log(habit);
+    // Buscar el hábito por ID
+    const habit = await Habit.findById(req.params.id);
 
     if (!habit) {
       return res.status(404).json({ message: 'Habit not found' });
     }
 
-    res.status(200).json({ message: 'Habit updated successfully', habit });
+    // Pasar el título junto con los datos del hábito
+    res.render('editHabit', {
+      habit,
+      title: 'Edit Habit'  // Título personalizado para esta vista
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error updating habit', error });
+    console.error(error);
+    res.status(500).json({ message: 'Error retrieving habit for edit' });
+  }
+};
+
+
+
+exports.updateHabit = async (req, res) => {
+  try {
+    const { name, description, category, goal, frequency, status, streak } = req.body;
+
+    const habit = await Habit.findByIdAndUpdate(
+      req.params.id,
+      { name, description, category, goal, frequency, status, streak, updatedAt: Date.now() },
+      { new: true }
+    );
+
+    if (!habit) {
+      return res.status(404).render('error', { message: 'Habit not found' });
+    }
+
+    res.redirect('/habits'); 
+  } catch (error) {
+    res.status(500).render('error', { message: 'Error updating habit', error });
   }
 };
 
@@ -109,15 +110,14 @@ exports.deleteHabit = async (req, res) => {
   try {
     const habit = await Habit.findByIdAndDelete(req.params.id);
 
-    console.log(habit);
-
     if (!habit) {
-      return res.status(404).json({ message: 'Habit not found' });
+      return res.status(404).render('error', { message: 'Habit not found' });
     }
 
-    res.status(200).json({ message: 'Habit deleted successfully', habit });
+    res.redirect('/habits'); // Redirige a la lista de hábitos después de la eliminación
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting habit', error });
+    res.status(500).render('error', { message: 'Error deleting habit', error });
   }
 };
+
 
