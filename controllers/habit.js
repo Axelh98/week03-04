@@ -1,4 +1,6 @@
 const Habit = require('../models/habit');
+const User = require('../models/user');
+
 
 // create a new habit
 exports.createHabit = async (req, res) => {
@@ -51,39 +53,42 @@ exports.getHabitById = async (req, res) => {  // Obtener un habit por su ID
 exports.getHabitsByUser = async (req, res) => {
   try {
       const habits = await Habit.find({ userId: req.params.userId });
-      if (!habits.length) {
-          return res.status(404).send('No habits found for this user');
-      }
-      res.render('userHabits', { title: `Habits for User ${req.params.userId}`, habits });
+
+      const user = await User.findById(req.params.userId);
+
+      const message = habits.length === 0 ? "You don't have any habits yet" : null;  // El mensaje si no hay hábitos
+      res.render('habits/habits', { 
+          title: `Habits for User ${req.params.userId}`, 
+          habits, 
+          user,
+          message  // it passes the message to the view
+      });
   } catch (error) {
       console.error(error);
       res.status(500).send('Error retrieving user habits');
   }
 };
 
-
-// En el controlador habitController.js
-exports.showEditHabitForm = async (req, res) => {
+// show the create habit form
+exports.showCreateHabitForm = (req, res) => {
+  
   try {
-    // Buscar el hábito por ID
-    const habit = await Habit.findById(req.params.id);
+      // Suponiendo que tienes el userId en la sesión del usuario
+      const userId = req.session.userId;
+      const user = req.session.user;    ; 
+      
+      // Verificar si el usuario está logueado (si es necesario)
+      if (!userId) {
+          return res.redirect('/login');  // Redirigir si no está logueado
+      }
 
-    if (!habit) {
-      return res.status(404).json({ message: 'Habit not found' });
-    }
-
-    // Pasar el título junto con los datos del hábito
-    res.render('editHabit', {
-      habit,
-      title: 'Edit Habit'  // Título personalizado para esta vista
-    });
+      // Renderizar el formulario de creación de hábito
+      res.render('habits/habitForm', { userId }, user);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error retrieving habit for edit' });
+      console.error(error);
+      res.status(500).send('Error al mostrar el formulario de creación de hábito');
   }
 };
-
-
 
 exports.updateHabit = async (req, res) => {
   try {
@@ -114,7 +119,7 @@ exports.deleteHabit = async (req, res) => {
       return res.status(404).render('error', { message: 'Habit not found' });
     }
 
-    res.redirect('/habits'); // Redirige a la lista de hábitos después de la eliminación
+    res.redirect('/habits');
   } catch (error) {
     res.status(500).render('error', { message: 'Error deleting habit', error });
   }

@@ -1,0 +1,32 @@
+<%- include('../partials/head') %>
+<!-- Incluye el head -->
+<%- include('../partials/header') %>
+<!-- Incluye el header -->
+<%- include('../partials/sidebar') %>
+<!-- Incluye el sidebar -->
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-4">
+  <!-- settings.ejs -->
+  <h1>Ajustes de Usuario</h1>
+  
+  <form action="/settings" method="POST">
+    <div class="mb-3">
+      <label for="firstName" class="form-label">Name</label>
+      <input type="text" class="form-control" id="name" name="name" value="<%= user.name %>">
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>">
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Current password</label>
+      <input type="password" class="form-control" id="password" name="password">
+    </div>
+    <div class="mb-3">
+      <label for="newPassword" class="form-label">New password</label>
+      <input type="password" class="form-control" id="newPassword" name="newPassword">
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+  </form>
+
+</main>

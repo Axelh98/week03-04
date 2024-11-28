@@ -1,20 +1,15 @@
 const mongoose = require('mongoose');
 
 const habitSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   name: { type: String, required: true },
-  description: { type: String, required: true },
-  category: { type: String, required: true },
-  startDate: { type: Date, required: true },
-  goal: { type: String, required: true },
-  frequency: { type: String, required: true },
-  status: { type: String, enum: ['Active', 'Inactive', 'Completed'], default: 'Active' },
+  description: { type: String },
+  category: { type: String },
+  startDate: { type: Date, default: Date.now },
+  frequency: { type: String },
+  goal: { type: String },
+  status: { type: String, default: 'active' },
   streak: { type: Number, default: 0 },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 });
 
-const Habit = mongoose.model('Habit', habitSchema);
-module.exports = Habit;
-
-
+module.exports = mongoose.model('Habit', habitSchema);

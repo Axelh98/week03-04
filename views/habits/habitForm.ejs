@@ -1,0 +1,61 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-4">
+    <h1>Crear Nuevo Hábito</h1>
+    <form action="/habits/create" method="POST">
+        <!-- Campo oculto para el userId (supongo que lo tienes disponible en req.session o de alguna manera) -->
+        <input type="hidden" name="userId" value="<%= user._id  %>">
+    
+        <!-- Campo para el nombre del hábito -->
+        <div class="mb-3">
+            <label for="name" class="form-label">Nombre del Hábito</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+    
+        <!-- Campo para la descripción del hábito -->
+        <div class="mb-3">
+            <label for="description" class="form-label">Descripción</label>
+            <textarea class="form-control" id="description" name="description"></textarea>
+        </div>
+    
+        <!-- Campo para la categoría del hábito -->
+        <div class="mb-3">
+            <label for="category" class="form-label">Categoría</label>
+            <select name="category" class="form-control" id="category">
+                <option value="fitness">Fitness</option>
+                <option value="health">Health</option>
+                <option value="productivity">Productivity</option>
+                <option value="social">Social</option>
+            </select>
+        </div>
+    
+        <!-- Campo para la fecha de inicio -->
+        <div class="mb-3">
+            <label for="startDate" class="form-label">Fecha de Inicio</label>
+            <input type="date" class="form-control" id="startDate" name="startDate" value="<%= new Date().toISOString().split('T')[0] %>">
+        </div>
+    
+        <!-- Campo para la frecuencia del hábito -->
+        <div class="mb-3">
+            <label for="frequency" class="form-label">Frecuencia</label>
+            <select class="form-control" id="frequency" name="frequency">
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+            </select>
+        </div>
+    
+        <!-- Campo para el objetivo del hábito -->
+        <div class="mb-3">
+            <label for="goal" class="form-label">Objetivo</label>
+            <input type="text" class="form-control" id="goal" name="goal">
+        </div>
+    
+        <!-- Botón para enviar el formulario -->
+        <button type="submit" class="btn btn-primary">Crear Hábito</button>
+    </form>
+</main>
+
+

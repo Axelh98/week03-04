@@ -6,46 +6,74 @@ const mongoose = require('mongoose');
 const connectDB = require('./database/connection');
 const habitRoutes = require('./routes/habits');
 const userRoutes = require('./routes/users');
-const expressLayouts = require('express-ejs-layouts');
+const authRoutes = require('./routes/auth');
+const dashboardRoutes = require('./routes/dashboard');
+const settingsRoutes = require('./routes/settings');
+const profileRoutes = require('./routes/profile');
+const checkAuth = require('./middleware/requireLogin');
 const port = 8080;
+const session = require('express-session');
 
 require('dotenv').config();
 
+// Session
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+}));
 
 // engine setup
-app.use(expressLayouts);
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
+
+// Middleware
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
+
+// Database connection
 connectDB();
+
 
 // Default route
 app.get('/', (req, res) => {
-    res.render('login', { title: 'Login'});
+  if (!req.session.userId) {
+    return res.redirect('auth/login');  // Si no está autenticado, redirige al login
+  }
+  res.render('/dashboard', { title: 'Dashboard', user: req.session.userId });  // Renderiza el dashboard
 });
 
-app.post('/login', (req, res) => {
-  const { email, password } = req.body;
-
-  // Aquí validas las credenciales con tu base de datos
-  console.log(`Email: ${email}, Password: ${password}`);
-
-  // Redirigir o mostrar un mensaje
-  if (email === 'test@example.com' && password === '1234') {
-      res.send('Login successful!');
-  } else {
-      res.status(401).send('Invalid credentials!');
+// Login route
+app.get('auth/login', (req, res) => {
+  if (req.session.userId) {
+    return res.redirect('/dashboard');  // Si ya está autenticado, redirige al dashboard
   }
+  res.render('auth/login', { title: 'Login' });  // Renderiza el formulario de login
 });
 
 // Habits routes
 app.use('/habits', habitRoutes);
+
+// Users routes
 app.use('/users', userRoutes);
+
+// Auth routes
+app.use('/auth', authRoutes);
+
+// Dashboard routes
+app.use('/dashboard', dashboardRoutes);
+
+// Settings routes
+app.use('/settings', settingsRoutes);
+
+// Profile routes 
+app.use('/profile', profileRoutes);
+
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
