@@ -1,14 +1,73 @@
-<form action="/habits/update/<%= habit._id %>" method="POST">
-    <input type="text" name="name" value="<%= habit.name %>" required />
-    <textarea name="description" required><%= habit.description %></textarea>
-    <input type="text" name="category" value="<%= habit.category %>" required />
-    <input type="number" name="goal" value="<%= habit.goal %>" required />
-    <input type="text" name="frequency" value="<%= habit.frequency %>" required />
-    <select name="status" required>
-      <option value="active" <%= habit.status === 'active' ? 'selected' : '' %>>Active</option>
-      <option value="inactive" <%= habit.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
-    </select>
-    <input type="number" name="streak" value="<%= habit.streak %>" required />
-    <button type="submit">Update Habit</button>
-  </form>
+<%- include('../partials/head') %>
+<!-- Incluye el head -->
+<%- include('../partials/header') %>
+<!-- Incluye el header -->
+<%- include('../partials/sidebar') %>
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-4">
+
+
   
+    <form action="/habits/update/<%= habit._id %>" method="POST" class="container mt-4">
+      <div class="row">
+        <div class="col-md-6 form-group mb-3">
+          <label for="name">Name of the habit</label>
+          <input type="text" id="name" name="name" class="form-control" value="<%= habit.name %>" required />
+        </div>
+        
+        <div class="col-md-6 form-group mb-3">
+          <label for="category">Categoría</label>
+          <select id="category" name="category" class="form-control" required>
+            <option value="fitness" <%= habit.category === 'fitness' ? 'selected' : '' %>>Fitness</option>
+            <option value="education" <%= habit.category === 'education' ? 'selected' : '' %>>Educación</option>
+            <option value="health" <%= habit.category === 'health' ? 'selected' : '' %>>Salud</option>
+            <option value="personal" <%= habit.category === 'personal' ? 'selected' : '' %>>Personal</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="row">
+      <div class="col-md-12 form-group mb-3">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" class="form-control" rows="3" required><%= habit.description %></textarea>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-4 form-group mb-3">
+        <label for="goal">Goal</label>
+        <input type="number" id="goal" name="goal" class="form-control" value="<%= habit.goal %>" required />
+      </div>
+      
+      <div class="col-md-4 form-group mb-3">
+        <label for="frequency">Frecuencia</label>
+        <select id="frequency" name="frequency" class="form-control" required>
+          <option value="daily" <%= habit.frequency === 'daily' ? 'selected' : '' %>>Diario</option>
+          <option value="weekly" <%= habit.frequency === 'weekly' ? 'selected' : '' %>>Semanal</option>
+          <option value="monthly" <%= habit.frequency === 'monthly' ? 'selected' : '' %>>Mensual</option>
+        </select>
+      </div>
+      
+      <div class="col-md-4 form-group mb-3">
+        <label for="streak">Streak</label>
+        <input type="number" id="streak" name="streak" class="form-control" value="<%= habit.streak %>" required />
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-12 form-group mb-3">
+        <label for="status">Status</label>
+        <select id="status" name="status" class="form-control" required>
+          <option value="active" <%= habit.status === 'active' ? 'selected' : '' %>>Active/option>
+          <option value="inactive" <%= habit.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-12">
+        <button type="submit" class="btn btn-primary w-100">Update habit</button>
+      </div>
+    </div>
+  </form>
+</main>

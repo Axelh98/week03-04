@@ -4,7 +4,7 @@ const habitController = require('../controllers/habit');
 const checkAuth = require('../middleware/requireLogin');
 
 // Obtain all habits
-//router.get('/', habitController.getHabitsByUser);
+router.get('/', habitController.getHabitsByUser);
 
 // Show the create habit form
 router.get('/create', checkAuth, habitController.showCreateHabitForm);
@@ -12,14 +12,11 @@ router.get('/create', checkAuth, habitController.showCreateHabitForm);
 // create a new habit
 router.post('/create', checkAuth, habitController.createHabit);
 
-// obtain habits by user
-router.get('/user/:userId', checkAuth, habitController.getHabitsByUser);
-
 // Obtain a habit by its ID
 router.get('/:id', habitController.getHabitById);
 
-// Show the edit habit form
-//router.get('/edit/:id', habitController.showEditHabitForm);
+// Show the edit habit form (showEditHabitForm)
+router.get('/edit/:habitId', habitController.showEditHabitForm);
 
 // update a habit by its ID
 router.post('/update/:id', habitController.updateHabit);

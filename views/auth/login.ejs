@@ -1,12 +1,30 @@
-<%- include('../partials/header') %> <!-- Incluye el header -->
+<%- include('../partials/head') %> <!-- Incluye el head -->
 
-<main>
-  <h1>Iniciar sesión</h1>
-  <form action="/auth/login" method="POST">
-    <input type="email" name="email" placeholder="Correo electrónico" required>
-    <input type="password" name="password" placeholder="Contraseña" required>
-    <button type="submit">Iniciar sesión</button>
-  </form>
+<main class="container-fluid min-vh-100 d-flex justify-content-center align-items-center">
+  <!-- Formulario de inicio de sesión centrado -->
+  <div class="card shadow-lg" style="max-width: 400px; width: 100%; padding: 20px;">
+    <h2 class="text-center mb-4">Sign in</h2>
+    
+    <form action="/auth/login" method="POST">
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+      </div>
+      
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+      </div>
+      
+      <button type="submit" class="btn btn-primary w-100 py-2">Sign in</button>
+    </form>
+    
+    <!-- Enlace para ir al formulario de registro -->
+    <div class="text-center mt-3">
+      <a href="/auth/register" class="btn btn-link text-decoration-none">Don't have an account? Sign up</a>
+    </div>
+  </div>
 </main>
+
 
 <%- include('../partials/footer') %> <!-- Incluye el footer -->

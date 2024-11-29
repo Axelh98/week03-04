@@ -11,6 +11,7 @@ const dashboardRoutes = require('./routes/dashboard');
 const settingsRoutes = require('./routes/settings');
 const profileRoutes = require('./routes/profile');
 const checkAuth = require('./middleware/requireLogin');
+const setUser = require('./middleware/setUser');
 const port = 8080;
 const session = require('express-session');
 
@@ -34,6 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(cors());
+app.use(setUser);
 
 
 // Database connection
@@ -51,9 +53,14 @@ app.get('/', (req, res) => {
 // Login route
 app.get('auth/login', (req, res) => {
   if (req.session.userId) {
-    return res.redirect('/dashboard');  // Si ya está autenticado, redirige al dashboard
+    return res.redirect('/dashboard');
   }
-  res.render('auth/login', { title: 'Login' });  // Renderiza el formulario de login
+  res.render('auth/login', { title: 'Login' });  
+});
+
+app.use((req, res, next) => {
+  res.locals.currentPath = req.originalUrl;  
+  next();
 });
 
 // Habits routes

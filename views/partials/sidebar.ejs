@@ -3,32 +3,25 @@
     <!-- Sidebar -->
     <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
       <div class="position-sticky">
-        <!-- Sidebar navigation -->   
+        <!-- Sidebar navigation -->
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" href="/">
+            <a class="nav-link <%= (currentPath === '/dashboard' ? 'active' : '') %>" href="/dashboard">
               Dashboard
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/habits/user/<%= user._id %>">Habits</a>
+            <a class="nav-link <%= (currentPath === '/habits' ? 'active' : '') %>" href="/habits">Habits</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/profile">
-              Profile
-            </a>
+            <a class="nav-link <%= (currentPath === '/profile' ? 'active' : '') %>" href="/profile">Profile</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/settings">
-              Settings
-            </a>
+            <a class="nav-link <%= (currentPath === '/settings' ? 'active' : '') %>" href="/settings">Settings</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/logout">
-              Close session
-            </a>
+            <a class="nav-link <%= (currentPath === '/logout' ? 'active' : '') %>" href="/auth/logout">Close session</a>
           </li>
-          
         </ul>
       </div>
     </nav>
