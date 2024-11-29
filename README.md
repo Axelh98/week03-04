@@ -1,8 +1,8 @@
-#API Documentation for User and Habit Management for CSE 341 Project 2
+# API Documentation for User and Habit Management for CSE 341 Project 2
 
 This is a RESTful API built using Node.js, Express, MongoDB, and Swagger for documentation.
 
-#Getting Started
+# Getting Started
 
 Follow these steps to set up and run the project locally.
 
@@ -42,10 +42,10 @@ npm start
 ```
 6. Open your browser and navigate to http://localhost:8080/api-docs to view the API documentation.
 
-#API Documentation
+# API Documentation
 The API documentation can be accessed at http://localhost:8080/api-docs.
 
-#Technologies Used
+# Technologies Used
 - Node.js: JavaScript runtime for server-side programming.
 - Express.js: Framework for route and middleware management.
 - EJS: Template engine for rendering dynamic views.
@@ -57,7 +57,7 @@ The API documentation can be accessed at http://localhost:8080/api-docs.
 - Body-Parser: Middleware for parsing request bodies.
 - Cors: Middleware for handling Cross-Origin Resource Sharing (CORS).   
  
- #Api Endpoints
+ # Api Endpoints
  ## Authentication
  ### Login
  ```
