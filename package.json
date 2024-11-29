@@ -20,7 +20,10 @@
     "express-ejs-layouts": "^2.5.1",
     "express-session": "^1.18.1",
     "mongoose": "^5.10.9",
-    "react-router-dom": "^7.0.1"
+    "react-router-dom": "^7.0.1",
+    "swagger-autogen": "^2.23.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"

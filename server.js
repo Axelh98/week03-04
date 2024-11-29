@@ -12,6 +12,11 @@ const settingsRoutes = require('./routes/settings');
 const profileRoutes = require('./routes/profile');
 const checkAuth = require('./middleware/requireLogin');
 const setUser = require('./middleware/setUser');
+const swaggerAutogen = require('swagger-autogen')();
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger-output.json');
+
+
 const port = 8080;
 const session = require('express-session');
 
@@ -36,6 +41,8 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(cors());
 app.use(setUser);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 // Database connection
